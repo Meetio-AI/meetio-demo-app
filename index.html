@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BridgeLink - Supplier Management</title>
+    <!-- Widget CSS loaded from dev server -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f9fafb;
+            color: #111827;
+            font-size: 14px;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            justify-items: stretch !important;
+            place-items: unset !important;
+        }
+
+        #app {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: none !important;
+            text-align: left !important;
+        }
+
+        .layout-wrapper {
+            display: flex;
+            flex: 1;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 16px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .sidebar-brand-logo {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand-info {
+            flex: 1;
+        }
+
+        .sidebar-brand-text {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 2px;
+        }
+
+        .sidebar-brand-description {
+            font-size: 11px;
+            color: #6b7280;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 0;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #9ca3af;
+            padding: 12px 24px 6px 24px;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 0 12px;
+        }
+
+        .sidebar-nav-item {
+            padding: 10px 12px;
+            margin: 0;
+            color: #374151;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.15s ease;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .sidebar-nav-item:hover {
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        .sidebar-nav-item.active {
+            background: #f3f4f6;
+            color: #111827;
+            font-weight: 600;
+        }
+
+
+        .sidebar-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 8px 12px;
+        }
+
+        .sidebar-footer {
+            margin: 0;
+            margin-top: auto;
+            padding: 12px 12px 16px 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            margin: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-user:hover {
+            background: #f3f4f6;
+        }
+
+        .sidebar-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .sidebar-user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111827;
+            line-height: 1.2;
+        }
+
+        .sidebar-user-email {
+            font-size: 11px;
+            color: #6b7280;
+            line-height: 1.2;
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 32px 40px;
+            overflow-x: auto;
+            background: #f9fafb;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .tab {
+            padding: 10px 16px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-bottom: none;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .tab.active {
+            background: #e3f2fd;
+            border-color: #2196F3;
+            color: #1976D2;
+            font-weight: 500;
+        }
+
+        .action-bar {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .action-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #d1d5da;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn:first-child {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .btn:last-child {
+            border-radius: 0 6px 6px 0;
+            border-left: none;
+        }
+
+        .btn.active {
+            background: #24292e;
+            color: #fff;
+            border-color: #24292e;
+        }
+
+        .btn-primary {
+            padding: 8px 16px;
+            background: #24292e;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .filter-chip {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 16px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        .status-dot.yellow { background: #f9a825; }
+        .status-dot.green { background: #43a047; }
+
+        .table-container {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* INTENTIONAL BUG: Columns shift left when items are selected */
+        .table-container.has-selection th:not(:first-child),
+        .table-container.has-selection td:not(:first-child) {
+            transform: translateX(-15px);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tag.procurement { background: #fff3cd; color: #856404; }
+        .tag.performance { background: #e1d5f6; color: #4a148c; }
+        .tag.risk { background: #ffcdd2; color: #c62828; }
+        .tag.relations { background: #bbdefb; color: #1565c0; }
+
+        .status {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .due-date.urgent {
+            color: #d32f2f;
+            font-weight: 500;
+        }
+
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .rating-highlight {
+            background: #ffe0b2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .task-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .edit-btn {
+            padding: 4px 8px;
+            background: transparent;
+            color: #666;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            opacity: 0;
+        }
+
+        .task-name-cell:hover .edit-btn {
+            opacity: 1;
+        }
+
+        .edit-btn:hover {
+            background: #f6f8fa;
+            color: #24292e;
+        }
+
+        .edit-btn.hidden {
+            visibility: hidden;
+        }
+
+        .bulk-actions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #24292e;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            align-items: center;
+            gap: 16px;
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.15s ease, visibility 0.15s ease;
+            display: flex;
+        }
+
+        .bulk-actions.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .bulk-actions button {
+            padding: 6px 12px;
+            background: #fff;
+            color: #24292e;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-cancel {
+            padding: 8px 16px;
+            background: #fff;
+            color: #24292e;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-save {
+            padding: 8px 16px;
+            background: #2196F3;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <img src="logo.png" alt="BridgeLink Logo" class="sidebar-brand-logo">
+                <div class="sidebar-brand-info">
+                    <div class="sidebar-brand-text">BridgeLink</div>
+                    <div class="sidebar-brand-description">Supplier Management Platform</div>
+                </div>
+            </div>
+
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item">Dashboard</li>
+                <li class="sidebar-nav-item">Analytics</li>
+                <li class="sidebar-nav-item active">Suppliers</li>
+                <li class="sidebar-nav-item">Products</li>
+                <li class="sidebar-nav-item">Contacts</li>
+            </ul>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section-title">Workspace</div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item">Tasks</li>
+                <li class="sidebar-nav-item">Documents</li>
+                <li class="sidebar-nav-item">Reports</li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">JH</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">Jonas Heberle</div>
+                        <div class="sidebar-user-email">jonas.heberle@becker.de</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-container">
+        <div class="tabs">
+            <button class="tab">Overview</button>
+            <button class="tab">Documents</button>
+            <button class="tab">Contacts</button>
+            <button class="tab">Articles</button>
+            <button class="tab">Negotiation</button>
+            <button class="tab">Transactions</button>
+            <button class="tab active">Tools</button>
+        </div>
+
+        <div class="action-bar">
+            <div class="action-row">
+                <div class="btn-group">
+                    <button class="btn active">All Tasks</button>
+                    <button class="btn">My Tasks</button>
+                </div>
+                <div>
+                    <button class="btn">Columns 9/11</button>
+                    <button class="btn-primary">+ Add Task</button>
+                </div>
+            </div>
+            <div class="action-row">
+                <input type="text" class="search-input" placeholder="Search...">
+            </div>
+            <div class="filter-chip">
+                Status is one of <span class="status-dot yellow"></span> In Progress, <span class="status-dot green"></span> Open
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 40px;"></th>
+                        <th>Name</th>
+                        <th>Groups</th>
+                        <th>Suppliers</th>
+                        <th>Ratings</th>
+                        <th>Responsible</th>
+                        <th>Creator</th>
+                        <th>Status</th>
+                        <th>Due Date...</th>
+                    </tr>
+                </thead>
+                <tbody id="tasksTableBody">
+                    <tr class="loading-row">
+                        <td colspan="9" style="text-align: center; padding: 40px; color: #6b7280;">
+                            <div class="loading-spinner"></div>
+                            Loading tasks...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div> <!-- Close layout-wrapper -->
+
+    <!-- Bulk Actions Bar -->
+    <div class="bulk-actions" id="bulkActions">
+        <span id="selectedCount">0 items selected</span>
+        <button onclick="bulkDelete()">Delete</button>
+        <button onclick="bulkExport()">Export</button>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="editForm">
+                <div class="form-group">
+                    <label>Task Name</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label>Group</label>
+                    <select id="editGroup">
+                        <option value="procurement">Procurement</option>
+                        <option value="performance">Performance</option>
+                        <option value="risk">Risk</option>
+                        <option value="relations">Relations</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Supplier</label>
+                    <input type="text" id="editSupplier">
+                </div>
+                <div class="form-group">
+                    <label>Rating</label>
+                    <input type="number" step="0.1" min="0" max="10" id="editRating">
+                </div>
+                <div class="form-group">
+                    <label>Responsible</label>
+                    <input type="text" id="editResponsible">
+                </div>
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" id="editDueDate">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="app"></div>
+
+    <!-- Onboarding Overlay for Demo Video -->
+    <div id="onboarding-overlay" class="onboarding-overlay">
+        <div class="overlay-backdrop"></div>
+
+        <!-- Widget label -->
+        <div class="overlay-label widget-label">
+            <div class="label-card cyan">
+                <span class="label-title">Meetio Widget</span>
+                <span class="label-subtitle">AI Intake Engineer</span>
+            </div>
+            <svg class="arrow-svg" width="70" height="150" viewBox="0 0 70 150" fill="none">
+                <path d="M25 0 C 25 35, 32 70, 45 110 Q 52 125, 58 138" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round" fill="none" class="arrow-path"/>
+                <circle cx="58" cy="138" r="6" fill="#06b6d4" class="arrow-dot"/>
+            </svg>
+        </div>
+
+        <!-- App label -->
+        <div class="overlay-label app-label">
+            <div class="label-card glass">
+                <span class="label-title">Customer App</span>
+                <span class="label-subtitle">Your product interface</span>
+            </div>
+            <svg class="arrow-svg app-arrow" width="100" height="130" viewBox="0 0 100 130" fill="none">
+                <path d="M80 0 C 70 30, 50 60, 30 90 Q 20 108, 15 120" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" stroke-linecap="round" fill="none" class="arrow-path"/>
+                <circle cx="15" cy="120" r="6" fill="rgba(255,255,255,0.8)" class="arrow-dot"/>
+            </svg>
+        </div>
+    </div>
+
+    <style>
+        .onboarding-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999998;
+            pointer-events: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .onboarding-overlay .overlay-backdrop {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .onboarding-overlay.visible .overlay-backdrop {
+            opacity: 1;
+        }
+
+        .onboarding-overlay.fade-out .overlay-backdrop {
+            opacity: 0;
+        }
+
+        .onboarding-overlay .overlay-label {
+            visibility: hidden;
+        }
+
+        .onboarding-overlay.visible .overlay-label {
+            visibility: visible;
+        }
+
+        .onboarding-overlay.fade-out .overlay-label {
+            visibility: hidden;
+        }
+
+        .overlay-backdrop {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                circle at calc(100% - 42px) calc(100% - 42px),
+                transparent 50px,
+                rgba(15, 23, 42, 0.6) 52px
+            );
+        }
+
+        .overlay-label {
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px);
+            animation: slideIn 0.6s ease forwards;
+        }
+
+        .label-card.cyan {
+            background: #0891b2;
+        }
+
+        .widget-label {
+            bottom: 100px;
+            right: 60px;
+            align-items: flex-end;
+            animation-delay: 0.3s;
+        }
+
+        .app-label {
+            top: 120px;
+            left: 500px;
+            align-items: flex-start;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .label-card {
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .label-card.glass {
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .label-title {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.3px;
+        }
+
+        .label-subtitle {
+            display: block;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .label-card.glass .label-title {
+            color: #ffffff;
+        }
+
+        .label-card.glass .label-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .arrow-svg {
+            margin-top: 5px;
+        }
+
+        .widget-label .arrow-svg {
+            margin-right: 10px;
+        }
+
+        .app-label .arrow-svg {
+            margin-left: 20px;
+        }
+
+        .arrow-path {
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            animation: drawArrow 1s ease forwards;
+            animation-delay: 0.8s;
+        }
+
+        .arrow-dot {
+            opacity: 0;
+            animation: dotAppear 0.3s ease forwards;
+            animation-delay: 1.6s;
+        }
+
+        @keyframes drawArrow {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes dotAppear {
+            to { opacity: 1; }
+        }
+    </style>
+
+    <script>
+        // Onboarding overlay - disabled for demo
+        document.addEventListener('DOMContentLoaded', function() {
+            const overlay = document.getElementById('onboarding-overlay');
+            if (overlay) overlay.style.display = 'none';
+        });
+    </script>
+
+    <!-- meetio widget -->
+    <script src="http://localhost:5173/widget.js"
+        data-project-key="pk_dev_test"
+        data-api-url="http://localhost:8000">
+    </script>
+
+    <script>
+        // API Configuration - using DummyJSON for realistic API calls
+        const API_BASE = 'https://dummyjson.com';
+
+        let tasksData = [];
+        let selectedTasks = new Set();
+        let currentEditingRow = null;
+        let currentEditingTaskId = null;
+
+        // Supplier data to enrich API responses
+        const suppliers = ['Mueller GmbH', 'TechSupply AG', 'Global Parts Ltd', 'Industrie Partner', 'LogistiXX GmbH', 'SafeParts Inc', 'Premium Supplies', 'Alpine Components', 'Nordic Materials'];
+        const groups = ['procurement', 'performance', 'risk', 'relations'];
+        const responsibles = ['M. Schmidt', 'K. Fischer', 'J. Bauer', 'L. Hoffmann', 'P. Wagner', 'R. Schulz', 'E. Braun', 'A. Weber', 'T. Meyer', 'S. Klein'];
+
+        // Fetch tasks from API
+        async function fetchTasks() {
+            console.log('[API] Fetching tasks from', API_BASE + '/todos?limit=10');
+            try {
+                const response = await fetch(`${API_BASE}/todos?limit=10`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                console.log('[API] Received', data.todos.length, 'tasks');
+
+                // Transform API data to our format
+                tasksData = data.todos.map((todo, i) => ({
+                    id: todo.id,
+                    name: todo.todo,
+                    group: groups[i % groups.length],
+                    supplier: suppliers[i % suppliers.length],
+                    rating: (6 + Math.random() * 4).toFixed(1),
+                    responsible: responsibles[i % responsibles.length],
+                    creator: responsibles[(i + 3) % responsibles.length],
+                    status: todo.completed ? 'Completed' : 'Open',
+                    dueDate: generateDueDate(i)
+                }));
+
+                renderTasks();
+            } catch (error) {
+                console.error('[API] Failed to fetch tasks:', error);
+                document.getElementById('tasksTableBody').innerHTML = `
+                    <tr><td colspan="9" style="text-align: center; padding: 40px; color: #dc2626;">
+                        Failed to load tasks. <button onclick="fetchTasks()" style="margin-left: 8px; padding: 4px 12px; cursor: pointer;">Retry</button>
+                    </td></tr>`;
+            }
+        }
+
+        function generateDueDate(offset) {
+            const date = new Date();
+            date.setDate(date.getDate() + offset * 7 + Math.floor(Math.random() * 30));
+            return `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
+        }
+
+        function renderTasks() {
+            const tbody = document.getElementById('tasksTableBody');
+            tbody.innerHTML = tasksData.map((task, index) => `
+                <tr data-id="${task.id}" data-index="${index}">
+                    <td><input type="checkbox" class="checkbox" onchange="handleCheckbox(${index}, this.checked)"></td>
+                    <td>
+                        <div class="task-name-cell">
+                            <span>${task.name}</span>
+                            <button class="edit-btn" onclick="openEditModal(${index})">✏️</button>
+                        </div>
+                    </td>
+                    <td><span class="tag ${task.group}">${task.group.charAt(0).toUpperCase() + task.group.slice(1)}</span></td>
+                    <td>${task.supplier}</td>
+                    <td>${parseFloat(task.rating) > 8 ? `<span class="rating-highlight">${task.rating}</span>` : task.rating}</td>
+                    <td>${task.responsible}</td>
+                    <td>${task.creator}</td>
+                    <td><span class="status"><span class="status-dot ${task.status === 'Open' ? 'green' : 'yellow'}"></span> ${task.status}</span></td>
+                    <td class="${isUrgent(task.dueDate) ? 'due-date urgent' : ''}">${task.dueDate}</td>
+                </tr>
+            `).join('');
+
+            selectedTasks.clear();
+            updateBulkActions();
+        }
+
+        function isUrgent(dateStr) {
+            const [day, month, year] = dateStr.split('.').map(Number);
+            const dueDate = new Date(year, month - 1, day);
+            const daysUntil = (dueDate - new Date()) / (1000 * 60 * 60 * 24);
+            return daysUntil < 14;
+        }
+
+        function handleCheckbox(index, checked) {
+            if (checked) {
+                selectedTasks.add(index);
+            } else {
+                selectedTasks.delete(index);
+            }
+            updateBulkActions();
+        }
+
+        function updateBulkActions() {
+            const bulkBar = document.getElementById('bulkActions');
+            const count = selectedTasks.size;
+            const editButtons = document.querySelectorAll('.edit-btn');
+            const tableContainer = document.querySelector('.table-container');
+
+            if (count > 0) {
+                bulkBar.classList.add('show');
+                document.getElementById('selectedCount').textContent = `${count} item${count > 1 ? 's' : ''} selected`;
+                editButtons.forEach(btn => btn.classList.add('hidden'));
+                // INTENTIONAL BUG: Add class that shifts columns
+                tableContainer.classList.add('has-selection');
+            } else {
+                bulkBar.classList.remove('show');
+                editButtons.forEach(btn => btn.classList.remove('hidden'));
+                tableContainer.classList.remove('has-selection');
+            }
+        }
+
+        function openEditModal(index) {
+            const task = tasksData[index];
+            currentEditingTaskId = task.id;
+            currentEditingRow = index;
+
+            document.getElementById('editName').value = task.name;
+            document.getElementById('editGroup').value = task.group;
+            document.getElementById('editSupplier').value = task.supplier;
+            document.getElementById('editRating').value = task.rating;
+            document.getElementById('editResponsible').value = task.responsible;
+
+            // Convert date format (DD.MM.YYYY to YYYY-MM-DD)
+            if (task.dueDate && task.dueDate.includes('.')) {
+                const parts = task.dueDate.split('.');
+                document.getElementById('editDueDate').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('show');
+            currentEditingRow = null;
+            currentEditingTaskId = null;
+        }
+
+        async function saveTask() {
+            if (currentEditingRow === null) return;
+
+            const updatedTask = {
+                todo: document.getElementById('editName').value,
+                completed: false
+            };
+
+            console.log('[API] Updating task', currentEditingTaskId, 'with:', updatedTask);
+
+            try {
+                // Make real API call to update
+                const response = await fetch(`${API_BASE}/todos/${currentEditingTaskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedTask)
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const result = await response.json();
+                console.log('[API] Update response:', result);
+
+                // Update local data
+                const dateValue = document.getElementById('editDueDate').value;
+                let formattedDate = tasksData[currentEditingRow].dueDate;
+                if (dateValue) {
+                    const parts = dateValue.split('-');
+                    formattedDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
+                }
+
+                tasksData[currentEditingRow] = {
+                    ...tasksData[currentEditingRow],
+                    name: document.getElementById('editName').value,
+                    group: document.getElementById('editGroup').value,
+                    supplier: document.getElementById('editSupplier').value,
+                    rating: document.getElementById('editRating').value,
+                    responsible: document.getElementById('editResponsible').value,
+                    dueDate: formattedDate
+                };
+
+                renderTasks();
+                closeModal();
+            } catch (error) {
+                console.error('[API] Failed to update task:', error);
+                alert('Failed to save changes. Please try again.');
+            }
+        }
+
+        async function bulkDelete() {
+            if (selectedTasks.size === 0) return;
+
+            if (confirm(`Delete ${selectedTasks.size} task(s)?`)) {
+                const indices = Array.from(selectedTasks);
+
+                // Make API calls for each deletion
+                for (const index of indices) {
+                    const taskId = tasksData[index].id;
+                    console.log('[API] Deleting task', taskId);
+
+                    try {
+                        const response = await fetch(`${API_BASE}/todos/${taskId}`, {
+                            method: 'DELETE'
+                        });
+                        console.log('[API] Delete response for task', taskId, ':', response.status);
+                    } catch (error) {
+                        console.error('[API] Failed to delete task', taskId, ':', error);
+                    }
+                }
+
+                // Remove from local data (reverse order to maintain indices)
+                indices.sort((a, b) => b - a).forEach(index => {
+                    tasksData.splice(index, 1);
+                });
+
+                selectedTasks.clear();
+                renderTasks();
+            }
+        }
+
+        async function bulkExport() {
+            if (selectedTasks.size === 0) return;
+
+            const exportData = Array.from(selectedTasks).map(index => tasksData[index]);
+
+            console.log('[API] Exporting tasks:', exportData);
+
+            // Simulate API call for export
+            try {
+                const response = await fetch(`${API_BASE}/products/1`, {
+                    method: 'GET'
+                });
+                console.log('[API] Export validation response:', response.status);
+            } catch (error) {
+                console.error('[API] Export failed:', error);
+            }
+
+            alert(`Exported ${exportData.length} task(s) - check console for data`);
+        }
+
+        function filterTable(searchTerm) {
+            const rows = document.querySelectorAll('#tasksTableBody tr');
+            const term = searchTerm.toLowerCase();
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchTasks();
+
+            document.getElementById('editForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveTask();
+            });
+
+            document.querySelector('.search-input').addEventListener('input', function(e) {
+                filterTable(e.target.value);
+            });
+        });
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('editModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
