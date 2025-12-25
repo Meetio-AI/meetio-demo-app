@@ -5,6 +5,7 @@ export default defineConfig({
     port: 4000
   },
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    sourcemap: 'hidden'
   }
 })

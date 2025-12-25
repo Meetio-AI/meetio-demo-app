@@ -1,4 +1,15 @@
 """Minimal FastAPI backend for Meetio test environment."""
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn="https://v7AycP4c4cJagWL3quiS@sonarly.dev/160",
+    traces_sample_rate=1.0,
+    environment="production",
+)
+
+# Instant detection - sends ping when server starts
+sentry_sdk.capture_message("sonarly-backend-installed", "info")
+
 import asyncio
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
