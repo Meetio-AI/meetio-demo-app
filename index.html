@@ -611,6 +611,10 @@
                 <li class="sidebar-nav-item">Reports</li>
             </ul>
 
+            <button onclick="fetch('/api/ping').then(r=>r.json()).then(d=>console.log(d))" style="margin:16px;padding:8px 16px;cursor:pointer">
+                Ping Backend
+            </button>
+
             <div class="sidebar-footer">
                 <div class="sidebar-user">
                     <div class="sidebar-avatar">JH</div>
