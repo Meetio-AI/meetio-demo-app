@@ -582,140 +582,9 @@
             font-size: 13px;
         }
 
-        /* Login Overlay */
-        .login-overlay {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #1e3a5f 0%, #0f1c2e 100%);
-            z-index: 100000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .login-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .login-card {
-            background: white;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .login-header {
-            margin-bottom: 32px;
-        }
-
-        .login-logo {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 16px;
-        }
-
-        .login-header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 4px;
-        }
-
-        .login-header p {
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .login-field {
-            text-align: left;
-            margin-bottom: 16px;
-        }
-
-        .login-field label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 6px;
-        }
-
-        .login-field input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .login-field input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
-
-        .login-error {
-            color: #dc2626;
-            font-size: 13px;
-            margin-bottom: 16px;
-            min-height: 20px;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: #1e3a5f;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .login-btn:hover {
-            background: #0f2744;
-        }
-
-        .login-hint {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #9ca3af;
-        }
     </style>
 </head>
 <body>
-    <!-- Login Overlay -->
-    <div id="login-overlay" class="login-overlay">
-        <div class="login-card">
-            <div class="login-header">
-                <img src="logo.png" alt="BridgeLink" class="login-logo">
-                <h1>BridgeLink</h1>
-                <p>Supplier Management Platform</p>
-            </div>
-            <form id="login-form">
-                <div class="login-field">
-                    <label for="login-username">Username</label>
-                    <input type="text" id="login-username" placeholder="Enter username" required>
-                </div>
-                <div class="login-field">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" placeholder="Enter password" required>
-                </div>
-                <p id="login-error" class="login-error"></p>
-                <button type="submit" class="login-btn">Sign In</button>
-            </form>
-            <p class="login-hint">Default: demo / demo123</p>
-        </div>
-    </div>
-
     <div class="layout-wrapper">
         <aside class="sidebar">
             <div class="sidebar-brand">
@@ -743,9 +612,22 @@
                 <li class="sidebar-nav-item">Reports</li>
             </ul>
 
-            <button onclick="fetch('/api/ping').then(r=>r.json()).then(d=>console.log(d))" style="margin:16px;padding:8px 16px;cursor:pointer">
-                Ping Backend
-            </button>
+            <!-- Network Test Buttons -->
+            <div style="margin:16px;display:flex;flex-direction:column;gap:8px;">
+                <div style="font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;margin-bottom:4px;">Network Tests</div>
+                <button onclick="fetch('/api/ping').then(r=>r.json()).then(d=>console.log('Fetch/XHR:',d)).catch(e=>console.log('Fetch/XHR error:',e))" style="padding:8px 12px;cursor:pointer;border:1px solid #d1d5da;border-radius:6px;background:#fff;font-size:13px;text-align:left;">
+                    Fetch/XHR
+                </button>
+                <button onclick="loadTestScript()" style="padding:8px 12px;cursor:pointer;border:1px solid #d1d5da;border-radius:6px;background:#fff;font-size:13px;text-align:left;">
+                    JS
+                </button>
+                <button onclick="loadTestImage()" style="padding:8px 12px;cursor:pointer;border:1px solid #d1d5da;border-radius:6px;background:#fff;font-size:13px;text-align:left;">
+                    Images
+                </button>
+                <button onclick="testWebSocket()" style="padding:8px 12px;cursor:pointer;border:1px solid #d1d5da;border-radius:6px;background:#fff;font-size:13px;text-align:left;">
+                    WS
+                </button>
+            </div>
 
             <div class="sidebar-footer">
                 <div class="sidebar-user">
@@ -1060,7 +942,8 @@
     <!-- meetio widget -->
     <script src="http://localhost:5173/widget.js"
         data-project-key="pk_dev_test"
-        data-api-url="http://localhost:8000">
+        data-api-url="http://localhost:8000"
+        crossorigin="anonymous">
     </script>
 
     <script>
@@ -1310,45 +1193,8 @@
             });
         }
 
-        // Login credentials (simple auth - not secure)
-        const VALID_CREDENTIALS = {
-            'demo': 'demo123',
-            'admin': 'admin123'
-        };
-
-        function checkAuth() {
-            const isLoggedIn = sessionStorage.getItem('bridgelink_auth');
-            const loginOverlay = document.getElementById('login-overlay');
-            if (isLoggedIn === 'true') {
-                loginOverlay.classList.add('hidden');
-            }
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('login-username').value.trim();
-            const password = document.getElementById('login-password').value;
-            const errorEl = document.getElementById('login-error');
-
-            if (VALID_CREDENTIALS[username] && VALID_CREDENTIALS[username] === password) {
-                sessionStorage.setItem('bridgelink_auth', 'true');
-                sessionStorage.setItem('bridgelink_user', username);
-                document.getElementById('login-overlay').classList.add('hidden');
-                errorEl.textContent = '';
-            } else {
-                errorEl.textContent = 'Invalid username or password';
-                document.getElementById('login-password').value = '';
-            }
-        }
-
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if already logged in
-            checkAuth();
-
-            // Login form handler
-            document.getElementById('login-form').addEventListener('submit', handleLogin);
-
             fetchTasks();
 
             document.getElementById('editForm').addEventListener('submit', function(e) {
@@ -1368,6 +1214,41 @@
                 closeModal();
             }
         });
+
+        // ============ NETWORK TEST FUNCTIONS ============
+
+        // JS: Dynamically load a JavaScript file
+        function loadTestScript() {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js?' + Date.now();
+            script.onload = () => console.log('JS loaded: lodash');
+            script.onerror = (e) => console.log('JS load error:', e);
+            document.head.appendChild(script);
+        }
+
+        // Images: Dynamically load an image
+        function loadTestImage() {
+            const img = new Image();
+            img.src = 'https://picsum.photos/200/200?' + Date.now();
+            img.onload = () => console.log('Image loaded:', img.src);
+            img.onerror = (e) => console.log('Image load error:', e);
+        }
+
+        // WS: Open a WebSocket connection
+        function testWebSocket() {
+            console.log('WS: Connecting...');
+            const ws = new WebSocket('wss://ws.postman-echo.com/raw');
+            ws.onopen = () => {
+                console.log('WS: Connected');
+                ws.send('Hello from BridgeLink!');
+            };
+            ws.onmessage = (e) => {
+                console.log('WS: Received:', e.data);
+                ws.close();
+            };
+            ws.onerror = (e) => console.log('WS: Error:', e);
+            ws.onclose = () => console.log('WS: Closed');
+        }
     </script>
 </body>
 </html>
